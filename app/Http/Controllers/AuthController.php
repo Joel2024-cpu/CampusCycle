@@ -22,11 +22,14 @@ class AuthController extends Controller
             'password' => 'required|min:6|confirmed',
         ]);
 
+        // 🔹 Jika email berisi 'admin', otomatis role admin
+        $role = str_contains($request->email, 'admin') ? 'admin' : 'user';
+
         User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'user',
+            'role' => $role,
         ]);
 
         return redirect()->route('login')->with('success', 'Akun berhasil dibuat. Silakan login!');
@@ -46,11 +49,13 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-
             $user = Auth::user();
-            return $user->role === 'admin'
-                ? redirect()->route('admin.dashboard')
-                : redirect()->route('user.dashboard');
+
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard')->with('success', 'Selamat datang Admin!');
+            } else {
+                return redirect()->route('user.dashboard')->with('success', 'Login berhasil!');
+            }
         }
 
         return back()->with('error', 'Email atau password salah');

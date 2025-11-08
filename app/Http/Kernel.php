@@ -40,8 +40,8 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
-        // Tambahkan middleware custom kamu di sini
-        'auth.admin' => \App\Http\Middleware\AdminMiddleware::class,
-        'auth.user' => \App\Http\Middleware\UserMiddleware::class,
+        // ✅ Custom middleware kamu
+        'admin' => \App\Http\Middleware\AdminMiddleware::class,
+        'user'  => \App\Http\Middleware\UserMiddleware::class,
     ];
 }
